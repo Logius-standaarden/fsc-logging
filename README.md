@@ -24,7 +24,7 @@ Copyright (c) 2022 VNG and the persons identified as the document authors. All r
 
 # 1. Introduction
 
-The logging part of the NLX standard describes how to log transactions on both requesting and providing side. A transaction ID is used to link the logs on both sides.
+The logging part of the NLX standard describes how to log transactions on both requesting and providing side. A transaction ID is used to link the log records on both sides.
 
 ## 1.1. Requirements Language
 
