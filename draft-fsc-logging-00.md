@@ -53,9 +53,9 @@ organization = "VNG"
 initials = "H."
 surname = "van Maanen"
 fullname = "Henk van Maanen"
-organization = "VNG"
+organization = "AceWorks"
   [author.address]
-   email = "henk.vanmaanen@vng.nl"
+   email = "henk.van.maanen@aceworks.nl"
 
 %%%
 
