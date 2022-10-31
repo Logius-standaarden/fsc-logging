@@ -2,14 +2,14 @@
 
 |  |  |
 | :--- | :--- |
-| Team NLX  | E. Hotting |
+| Team FSC  | E. Hotting |
 | Request for Comments: X | VNG |
 |  | X |
 |  | X |
 |  | November 2022 |
 
 
-#        <center>NLX Logging</center>
+#        <center>FSC Logging</center>
 
 # Abstract
 
@@ -24,7 +24,7 @@ Copyright (c) 2022 VNG and the persons identified as the document authors. All r
 
 # 1. Introduction
 
-The logging part of the NLX standard describes how to log transactions on both requesting and providing side. A transaction ID is used to link the log records on both sides.
+The logging part of the FSC standard describes how to log transactions on both requesting and providing side. A transaction ID is used to link the log records on both sides.
 
 ## 1.1. Requirements Language
 
@@ -37,11 +37,11 @@ This section lists terms and abbreviations that are used in this document.
 ### 1.2.1. Terminology Used in This Document
 
 Directory
-: An NLX directory holds information about all services in the NLX system so they can be discovered. 
+: An FSC directory holds information about all services in the FSC system so they can be discovered. 
 
 ### 1.2.2. Abbreviations
 
-NLX:  Not an abbreviation, just a name
+FSC:  Not an abbreviation, just a name
 
 
 # 2. Chapter
