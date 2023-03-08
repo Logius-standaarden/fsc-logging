@@ -126,28 +126,53 @@ It is recommended to also add the TransactionID to logs created by other applica
 ## TransactionLog record{#specification_transaction_log_record}
 
 * *TransactionID(string):*  
-  A UUID[@!RFC4122] version 4 that identifies a Transaction.
+  A UUID[@!RFC4122] version 4 that identifies a Transaction.  
 * *Direction(int32):*  
-  The Direction of the request. The possible values are defined in the [Direction enum](#transaction_log_record).
+  The Direction of the request. The possible values are defined in the [Direction enum](#transaction_log_record).  
 * *GrantHash(string):*  
   The hash of the Grant used to authorize the request.
-* *SourcePeerID(string):*
-  The ID of the Peer making the request.
-* *DestinationPeerID(string):*
-  The ID of the Peer receiving the request.
+* *Source(TransactionLogRecordSource):*
+  Object containing information about the source of the request.    
+* *Destination(TransactionLogRecordDestination):*
+  Object containing information about the Destination. 
 * *ServiceName(string):*
-  The name of the Service being requested.
+  The name of the Service being requested.  
 * *CreatedAt(uint64):*
-  A unix timestamp of the date on which the transaction log record was created.
+  A unix timestamp of the date on which the transaction log record was created.  
 
-### TransactionLog record delegation{#specification_transaction_log_record_delegation}
+### TransactionLogRecordSource {#transaction_log_source}
 
-* *Record(TransactionLog record):*  
-  A Transaction log record as [previously described](#specification_transaction_log_record)  
-* *SourceDelegatorPeerID(string):*  
-  The ID of the Peer that acts as Delegator for the Peer making the request.
-* *DestinationDelegatorPeerID(string):*  
-  The ID of the Peer that acts as Delegator for the Peer receiving the request.
+* *Data(object):*  
+  Object containing information about the identity of the source. Can be either [Source](#source) or [DelegatedSource](#delegated_source)  
+
+### TransactionLogRecordDestination {#transaction_log_destination}
+
+* *Data(object):*
+  Object containing information about the identity of the destination. Can be either [Destination](#destination) or [DelegatedDestination](#delegated_destination)  
+
+### Source{#source}
+
+* *OutwayPeerID(string):*  
+  The ID of the Peer owning the Outway making the request.
+
+### DelegatedSource{#delegated_source}
+
+* *OutwayPeerID(string):*  
+  The ID of the Peer owning the Outway making the request.  
+  *DelegatorPeerID(string):*  
+  The ID of the Peer acting as Delegator.  
+
+### Destination{#destination}
+
+* *ServicePeerID(string):*  
+  The ID of the Peer providing the Service.  
+
+### DelegatedDestination{#delegated_destination}
+
+* *ServicePeerID(string):*  
+  The ID of the Peer providing the Service.  
+* *DelegatorPeerID(string):*  
+  The ID of the Peer acting as delegator.
 
 ## Manager
 
@@ -161,13 +186,13 @@ The Manager **MUST** be able to provide TransactionLog records to other Peers.
 
 The Manager **MUST** only return TransactionLog records which match the following criteria:
 
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.SourcePeerID`
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.DestinationPeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Source.OutwayPeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Destination.ServicePeerID`
 
 If the Delegation extension is enabled the following two criteria also apply:
 
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.SourceDelegatorPeerID`
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.DestinationDelegatorPeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Source.DelegatorPeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Destination.DelegatorPeerID`
 
 ### Interfaces
 
@@ -184,16 +209,44 @@ message TransactionLogRecord {
     string transaction_id = 1;
     Direction direction = 2;
     string grant_hash = 3;
-    string source_peer_id = 4;
-    string destination_peer_id = 5;
+    TransactionLogRecordSource source = 4;
+    TransactionLogRecordDestination destination = 5;
     string service_name = 6;
     uint64 created_at = 7;
 }
 
-message TransactionLogRecordDelegation {
-    TransactionLogRecord record = 1;
-    string source_delegator_peer_id = 2;
-    string destination_delegator_peer_id 3;
+message TransactionLogRecordSource {
+  message Source {
+    string outway_peer_id = 1;
+  }
+
+  message DelegatedSource {
+    string outway_peer_id = 1;
+    string delegator_peer_id = 2;
+  }
+
+  oneof data {
+    Source source = 1;
+    DelegatedSource delegated_source = 2;
+  }
+}
+
+message TransactionLogRecordDestination {
+  message Destination {
+    string service_peer_id = 1;
+    string service_name = 2; 
+  }
+
+  message DelegatedDestination {
+    string service_peer_id = 1;
+    string service_name = 2;
+    string delegator_peer_id = 3;
+  }
+
+  oneof data {
+    Destination destination = 1;
+    DelegatedDestination delegated_destination = 2;
+  }
 }
 ```
 
@@ -236,16 +289,8 @@ message ListTransactionRecordsRequest{
     repeated Filter filters = 2;
 }
 
-message TransactionLogRecordResponse {
-    oneof transaction {
-        TransactionLogRecord log_record = 1;
-        TransactionLogRecordDelegation log_record_delegation = 2;
-    }
-  }
-  
-
 message ListTransactionRecordsResponse {
-    repeated TransactionLogRecordResponse transaction_log_records = 1;
+    repeated TransactionLogRecord records = 1;
 }
 ```
 
@@ -269,10 +314,9 @@ The Inway **MUST** deny the request if the TransactionLog record could not be cr
 
 #### Delegation 
 
-A record **MUST** be written according to the [TransactionLog record delegation specification](#specification_transaction_log_record_delegation) when:
+When the requesting Peer is making the request on behalf of another Peer the [TransactionLogSource](#transaction_log_source) **MUST** contain a [DelegatedSource](#delegated_source) object.
 
-1. The requesting Peer is making a request on behalf of another Peer. 
-1. The Service is published on behalf of another Peer.
+When the Service is published on behalf of another Peer the [TransactionLogDestination](#transaction_log_destination) **MUST** contain a [DelegatedDestination](#delegated_destination) object.
 
 #### Error response
 
@@ -302,10 +346,9 @@ The Outway **MUST** add the TransactionID to the response sent to the Client usi
 
 #### Delegation
 
-A record **MUST** be written according to the [TransactionLog record delegation specification](#specification_transaction_log_record_delegation) when:
+When the requesting Peer is making the request on behalf of another Peer the [TransactionLogSource](#transaction_log_source) **MUST** contain a [DelegatedSource](#delegated_source) object.
 
-1. The requesting Peer is making a request on behalf of another Peer.
-1. The Service is published on behalf of another Peer.
+When the Service is published on behalf of another Peer the [TransactionLogDestination](#transaction_log_destination) **MUST** contain a [DelegatedDestination](#delegated_destination) object.
 
 #### Error response
 
