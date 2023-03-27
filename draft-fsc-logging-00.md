@@ -48,6 +48,15 @@ organization = "VNG"
   [author.address]
    email = "niels.dequeker@vng.nl"
 
+[[author]]
+initials = "E."
+surname = "van Gelderen"
+fullname = "Edward van Gelderen"
+organization = "vanG IT"
+  [author.address]
+   email = "e.van.gelderen@vang.nl"
+
+
 %%%
 
 .# Abstract
