@@ -97,17 +97,17 @@ A request made by a Peer to a Service.
 
 *TransactionLog:*  
 
-A Peers log of transactions. This log can contain both incoming and outgoing requests.
+A Peers log of Transactions. This log can contain both incoming and outgoing requests.
 
 *TransactionID:*  
   
-A unique identifier which can be used to trace a transaction between Peers.
+A unique identifier which can be used to trace a Transaction between Peers.
 
 # Architecture
 
 ## Writing to the TransactionLog
 
-A Peer makes an HTTP request to a Service. The Outway will generate a unique ID for the request and write a record to the TransactionLog before proxying the request to the Inway.
+A Peer makes an HTTP request to a Service. The Outway will generate a unique ID for the Transaction and write a record to the TransactionLog before proxying the request to the Inway.
 The Inway will parse the unique ID from the request and also write a record containing the unique ID to its own TransactionLog before proxying the request to the Service.
 
 !---
@@ -127,61 +127,31 @@ The Manager returns only logs records that involve the Peer requesting the log r
 
 ## Connecting log records 
 
-Each TransactionLog record will have a TransactionID which is the unique ID for the Transaction. This ID is used to link the TransactionLog records of a Transactions made across multiple Peers.
+Each log record will have a TransactionID which is the unique ID for the Transaction. This ID is used to link the log records of a Transaction made across multiple Peers.
 It is recommended to also add the TransactionID to logs created by other applications involved with the Transaction. E.g. the client making the request or the API offered as Service. This will enable Peers to provide a detailed audit trail of a request.   
 
 # Specification 
 
-## TransactionLog record{#specification_transaction_log_record}
+## Log record {#log_record}
 
-* *TransactionID(string):*  
-  A UUID[@!RFC4122] version 4 that identifies a Transaction.  
-* *Direction(int32):*  
-  The Direction of the request. The possible values are defined in the [Direction enum](#transaction_log_record).  
-* *GrantHash(string):*  
-  The hash of the Grant used to authorize the request.
-* *Source(TransactionLogRecordSource):*
-  Object containing information about the source of the request.    
-* *Destination(TransactionLogRecordDestination):*
-  Object containing information about the Destination. 
-* *ServiceName(string):*
-  The name of the Service being requested.  
-* *CreatedAt(uint64):*
-  A unix timestamp of the date on which the transaction log record was created.  
+The fields that a log record **MUST** contain are described in the [OpenAPI Specification](logging/logging.yaml)
 
-### TransactionLogRecordSource {#transaction_log_source}
+### Access token
 
-* *Data(object):*  
-  Object containing information about the identity of the source. Can be either [Source](#source) or [DelegatedSource](#delegated_source)  
+Data from the access token **MUST** be used to fill the following fields of the log record: 
 
-### TransactionLogRecordDestination {#transaction_log_destination}
+`accessToken.gth` -->  `logRecord.grant_hash`
+`accessToken.sub` -->  `logRecord.source.outway_peer_id`
+`accessToken.iss` -->  `logRecord.destination.service_peer_id`
+`accessToken.svc` -->  `logRecord.service_name`
 
-* *Data(object):*
-  Object containing information about the identity of the destination. Can be either [Destination](#destination) or [DelegatedDestination](#delegated_destination)  
+in case of a Peer making a request on behalf of another Peer an additional field **MUST** be set:
 
-### Source{#source}
+`accessToken.cdi` --> `logRecord.source.delegator_peer_id`
 
-* *OutwayPeerID(string):*  
-  The ID of the Peer owning the Outway making the request.
+in case of a request made to a Service offered on behalf of another Peer and additional field **MUST** be set:
 
-### DelegatedSource{#delegated_source}
-
-* *OutwayPeerID(string):*  
-  The ID of the Peer owning the Outway making the request.  
-  *DelegatorPeerID(string):*  
-  The ID of the Peer acting as Delegator.  
-
-### Destination{#destination}
-
-* *ServicePeerID(string):*  
-  The ID of the Peer providing the Service.  
-
-### DelegatedDestination{#delegated_destination}
-
-* *ServicePeerID(string):*  
-  The ID of the Peer providing the Service.  
-* *DelegatorPeerID(string):*  
-  The ID of the Peer acting as delegator.
+`accessToken.sdi` --> `logRecord.destination.delegator_peer_id`
 
 ## Manager
 
@@ -191,117 +161,21 @@ The FSC Log specification requires the Manager described in Core to be implement
 
 #### Providing TransactionLog records
 
-The Manager **MUST** be able to provide TransactionLog records to other Peers.
+The Manager **MUST** be able to provide log records to other Peers.
 
-The Manager **MUST** only return TransactionLog records which match the following criteria:
+The Manager **MUST** only return log records which match the following criteria:
 
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Source.OutwayPeerID`
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Destination.ServicePeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.source.outway_peer_id`
+- The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.destination.service_peer_id`
 
 If the Delegation extension is enabled the following two criteria also apply:
 
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Source.DelegatorPeerID`
-- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `TransactionLogRecord.Destination.DelegatorPeerID`
+- The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.source.delegator_peer_id`
+- The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `logRecord.destination.delegator_peer_id`
 
-### Interfaces
+### Interface
 
-#### TransactionLog Record{#transaction_log_record}
-
-```
-enum Direction {
-    DIRECTION_UNSPECIFIED = 0;
-    DIRECTION_INCOMING = 1;
-    DIRECTION_OUTGOING = 2;
-}
-
-message TransactionLogRecord {
-    string transaction_id = 1;
-    Direction direction = 2;
-    string grant_hash = 3;
-    TransactionLogRecordSource source = 4;
-    TransactionLogRecordDestination destination = 5;
-    string service_name = 6;
-    uint64 created_at = 7;
-}
-
-message TransactionLogRecordSource {
-  message Source {
-    string outway_peer_id = 1;
-  }
-
-  message DelegatedSource {
-    string outway_peer_id = 1;
-    string delegator_peer_id = 2;
-  }
-
-  oneof data {
-    Source source = 1;
-    DelegatedSource delegated_source = 2;
-  }
-}
-
-message TransactionLogRecordDestination {
-  message Destination {
-    string service_peer_id = 1;
-    string service_name = 2; 
-  }
-
-  message DelegatedDestination {
-    string service_peer_id = 1;
-    string service_name = 2;
-    string delegator_peer_id = 3;
-  }
-
-  oneof data {
-    Destination destination = 1;
-    DelegatedDestination delegated_destination = 2;
-  }
-}
-```
-
-#### RPC ListTransactionRecords
-
-The Remote Procedure Call `ListTransactionRecords` **MUST** only return TransactionLog records involving the Peer calling the RPC.
-
-The Remote Procedure Call `ListTransactionRecords` **MUST** be implemented with the following interface and messages:
-
-```
-enum SortOrder {
-  SORT_ORDER_UNSPECIFIED = 0;
-  SORT_ORDER_ASCENDING = 1;
-  SORT_ORDER_DESCENDING = 2;
-}
-
-message Pagination {
-  string start_id = 1;
-  uint32 limit = 2; 
-  SortOrder order = 3;
-}
-
-rpc ListTransactionRecords(ListTransactionLogRecordsRequest) returns (ListTransactionLogRecordsResponse);
-
-message ListTransactionRecordsRequest{
-    message Period {
-        uint64 start = 1;
-        uint64 end = 2;
-    }
-    
-    message Filter {
-      Period period = 1;
-      string transaction_id = 2;
-      string service_name = 3;
-      string grant_hash = 4;
-      
-    }
-   
-    Pagination pagination = 1;
-    repeated Filter filters = 2;
-}
-
-message ListTransactionRecordsResponse {
-    repeated TransactionLogRecord records = 1;
-}
-```
+The Manager **MUST** implement the interface described in the [OpenAPI Specification](logging/logging.yaml)
 
 ## Inway
 
@@ -317,15 +191,15 @@ The Inway **MUST** use the TransactionID provided by the Outway in the HTTP head
 
 The Inway **MUST** add the TransactionID to the request sent to the Service using the HTTP header `Fsc-Transaction-Id`.
 
-The TransactionLog record **MUST** contain the fields described in the [TransactionLog record specification](#specification_transaction_log_record)
+The TransactionLog record **MUST** contain the fields described in the [log record section](#log_record)
 
-The Inway **MUST** deny the request if the TransactionLog record could not be created. 
+The Inway **MUST** deny the request if the record to the TransactionLog could not be written. 
 
 #### Delegation 
 
-When the requesting Peer is making the request on behalf of another Peer the [TransactionLogSource](#transaction_log_source) **MUST** contain a [DelegatedSource](#delegated_source) object.
+When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](logging/logging.yaml).
 
-When the Service is published on behalf of another Peer the [TransactionLogDestination](#transaction_log_destination) **MUST** contain a [DelegatedDestination](#delegated_destination) object.
+When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](logging/logging.yaml).
 
 #### Error response
 
@@ -347,17 +221,17 @@ The Outway **MUST** create a TransactionID which **MUST** be unique for the tran
 
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
-The TransactionLog record **MUST** contain the fields described in the [TransactionLog record specification](#specification_transaction_log_record).
+The TransactionLog record **MUST** contain the fields described in the [TransactionLog record section](#transaction_log_record)
 
-The Outway **MUST** deny the request if the TransactionLog record could not be written.
+The Outway **MUST** deny the request if the record to the TransactionLog could not be written.
 
 The Outway **MUST** add the TransactionID to the response sent to the Client using the HTTP header `Fsc-Transaction-Id`.
 
 #### Delegation
 
-When the requesting Peer is making the request on behalf of another Peer the [TransactionLogSource](#transaction_log_source) **MUST** contain a [DelegatedSource](#delegated_source) object.
+When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](logging/logging.yaml).
 
-When the Service is published on behalf of another Peer the [TransactionLogDestination](#transaction_log_destination) **MUST** contain a [DelegatedDestination](#delegated_destination) object.
+When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](logging/logging.yaml).
 
 #### Error response
 

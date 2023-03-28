@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: FSC Logging
+  version: 1.0.0
+  description: Logging REST API
+servers:
+  - url: https://{managerUrl}:8443/v1
+    variables:
+      managerUrl:
+        default: localhost
+        description: URL of the Manager
+paths:
+  /logs:
+    get:
+      tags:
+        - logging
+      summary: Returns logs
+      operationId: getLogs
+      parameters:
+        - $ref: '#/components/parameters/queryPaginationCursor'
+        - $ref: '#/components/parameters/queryPaginationLimit'
+        - $ref: '#/components/parameters/queryPaginationOrder'
+        - in: query
+          description: A Unix timestamp. Only logs with a creation date after this value will be returned
+          name: after
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          required: false
+        - in: query
+          description: A Unix timestamp. Only logs with a creation date before this value will be returned
+          name: before
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          required: false
+        - in: query
+          description: A list of Grant hashes on which to filter
+          name: grant_hash
+          schema:
+            type: array
+            items:
+              type: string
+              description: The hash of a Grant
+              example: $1$4$+PQI7we01qIfEwq4O5UioLKzjGBgRva6F5+bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w/mg==
+              maxLength: 1024
+          required: false
+          style: form
+          explode: false
+        - in: query
+          description: A list of service names on which to filter
+          name: service_name
+          schema:
+            type: array
+            items:
+              type: string
+              description: The name of the Service
+              example: random_service_name
+              maxLength: 255
+              minLength: 3
+          required: false
+          style: form
+          explode: false
+        - in: query
+          description: A list of transaction IDs on which to filter
+          name: transaction_id
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/transactionID'
+          required: false
+          style: form
+          explode: false
+      responses:
+        200:
+          description: Log records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    description: List of log records
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/logRecord'
+                  pagination:
+                    $ref: '#/components/schemas/paginationResult'
+                required:
+                  - records
+                  - pagination
+components:
+  parameters:
+    queryPaginationCursor:
+      in: query
+      name: cursor
+      description: A cursor from which paginated results should be returned. Leave empty for the first page
+      schema:
+        type: string
+      required: false
+    queryPaginationLimit:
+      in: query
+      name: limit
+      description: The maximum number of results
+      schema:
+        type: integer
+        maximum: 1000
+        minimum: 1
+      required: false
+    queryPaginationOrder:
+      in: query
+      name: sort_order
+      description: The sorting order of the results
+      required: false
+      schema:
+        $ref: '#/components/schemas/sortOrder'
+  schemas:
+    logRecord:
+      description: A log record
+      type: object
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/transactionID'
+        direction:
+          description: The direction of a request. I.e. is the request being send or received
+          type: string
+          enum:
+            - DIRECTION_INCOMING
+            - DIRECTION_OUTGOING
+        grant_hash:
+          type: string
+          description: The hash of a Grant
+          example: $1$4$+PQI7we01qIfEwq4O5UioLKzjGBgRva6F5+bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w/mg==
+          maxLength: 1024
+        source:
+          oneOf:
+            - $ref: '#/components/schemas/source'
+            - $ref: '#/components/schemas/sourceDelegated'
+        destination:
+          oneOf:
+            - $ref: '#/components/schemas/destination'
+            - $ref: '#/components/schemas/destinationDelegated'
+        service_name:
+          description: The name of the Service
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: random_service_name
+        created_at:
+          description: A Unix timestamp of the creation date
+          type: integer
+          format: int64
+          minimum: 0
+    source:
+      description: Details of the Peer initiating the request
+      type: object
+      properties:
+        outway_peer_id:
+          $ref: '#/components/schemas/peerID'
+    sourceDelegated:
+      description: Details of the Peer initiating the request and the Delegator
+      type: object
+      properties:
+        outway_peer_id:
+          $ref: '#/components/schemas/peerID'
+        delegator_peer_id:
+          $ref: '#/components/schemas/peerID'
+    destination:
+      description: Details of the Peer offering the Service
+      type: object
+      properties:
+        service_peer_id:
+          $ref: '#/components/schemas/peerID'
+    destinationDelegated:
+      description: Details of the Peer offering the Service and the Delegator
+      type: object
+      properties:
+        service_peer_id:
+          $ref: '#/components/schemas/peerID'
+        delegator_peer_id:
+          $ref: '#/components/schemas/peerID'
+    peerID:
+      description: The ID of a Peer
+      type: string
+      example: "12345678901234567891"
+      minLength: 3
+    sortOrder:
+      description: The order in which the results should be returned
+      type: string
+      enum:
+        - SORT_ORDER_ASCENDING
+        - SORT_ORDER_DESCENDING
+    transactionID:
+      type: string
+      description: An UUID version 4 that identifies a Transaction
+      example: ce754ff9-3d1d-4dac-9f76-2267ff36cb25
+      format: uuid
+      minLength: 36
+      maxLength: 36
+    paginationResult:
+      type: object
+      properties:
+        next_cursor:
+          description: A cursor that can be used to retrieve the next page or an empty string if there are no more results
+          type: string
