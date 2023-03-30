@@ -151,7 +151,7 @@ in case of a Peer making a request on behalf of another Peer an additional field
 
 in case of a request made to a Service offered on behalf of another Peer and additional field **MUST** be set:
 
-`accessToken.sdi` --> `logRecord.destination.delegator_peer_id`
+`accessToken.pdi` --> `logRecord.destination.delegator_peer_id`
 
 ## Manager
 
