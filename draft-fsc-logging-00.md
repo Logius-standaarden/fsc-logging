@@ -110,6 +110,9 @@ A unique identifier which can be used to trace a Transaction between Peers.
 A Peer makes an HTTP request to a Service. The Outway will generate a unique ID for the Transaction and write a record to the TransactionLog before proxying the request to the Inway.
 The Inway will parse the unique ID from the request and also write a record containing the unique ID to its own TransactionLog before proxying the request to the Service.
 
+> Please note that it is not required to guarantee that the record is immediately stored in the TransactionLog database. We require confirmation that the record is received, but persisting the data can be scheduled for later on.
+> For example, you can introduce a message broker to improve performance. The message broker will ensure the records are persisted later on.
+  
 !---
 ![Write to the TransactionLog](diagrams/seq-write-transaction-log.svg "Write to the TransactionLog")
 ![Write to the TransactionLog](diagrams/seq-write-transaction-log.ascii-art "Write to the TransactionLog")
