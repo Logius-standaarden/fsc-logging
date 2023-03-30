@@ -20,11 +20,11 @@ end box
 client -> outway: Request
 outway -> outway: Generate __TransactionID__
 outway -> transactionLogConsumer: Write record\nwith __TransactionID__
-transactionLogConsumer --> outway: Write succeeded
+transactionLogConsumer --> outway: Record received
 outway -> inway: Request\nwith __TransactionID__ in HTTP header
 inway -> inway: Parse __TransactionID__ from request
 inway -> transactionLogProvider: Write record\nwith __TransactionID__
-transactionLogProvider --> inway:  Write succeeded
+transactionLogProvider --> inway:  Record received
 inway -> service: Request
 service --> inway: Response
 inway --> outway: Response
