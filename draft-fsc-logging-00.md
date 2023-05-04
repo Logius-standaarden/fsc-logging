@@ -192,6 +192,8 @@ The Inway **MUST** write a record to the TransactionLog for each received reques
 
 The Inway **MUST** use the TransactionID provided by the Outway in the HTTP header `Fsc-Transaction-Id`.
 
+The Inway **MUST** deny the request when the TransactionID has not been provided by the Outway in the HTTP header `Fsc-Transaction-Id`.
+
 The Inway **MUST** add the TransactionID to the request sent to the Service using the HTTP header `Fsc-Transaction-Id`.
 
 The TransactionLog record **MUST** contain the fields described in the [log record section](#log_record)
