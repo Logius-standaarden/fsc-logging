@@ -17,9 +17,9 @@ paths:
       summary: Returns logs
       operationId: getLogs
       parameters:
-        - $ref: '#/components/parameters/queryPaginationCursor'
-        - $ref: '#/components/parameters/queryPaginationLimit'
-        - $ref: '#/components/parameters/queryPaginationOrder'
+        - $ref: "#/components/parameters/queryPaginationCursor"
+        - $ref: "#/components/parameters/queryPaginationLimit"
+        - $ref: "#/components/parameters/queryPaginationOrder"
         - in: query
           description: A Unix timestamp. Only logs with a creation date after this value will be returned
           name: after
@@ -69,7 +69,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/transactionID'
+              $ref: "#/components/schemas/transactionID"
           required: false
           style: form
           explode: false
@@ -85,9 +85,9 @@ paths:
                     description: List of log records
                     type: array
                     items:
-                      $ref: '#/components/schemas/logRecord'
+                      $ref: "#/components/schemas/logRecord"
                   pagination:
-                    $ref: '#/components/schemas/paginationResult'
+                    $ref: "#/components/schemas/paginationResult"
                 required:
                   - records
                   - pagination
@@ -108,21 +108,21 @@ components:
         type: integer
         maximum: 1000
         minimum: 1
-      required: false
+      required: true
     queryPaginationOrder:
       in: query
       name: sort_order
       description: The sorting order of the results
       required: false
       schema:
-        $ref: '#/components/schemas/sortOrder'
+        $ref: "#/components/schemas/sortOrder"
   schemas:
     logRecord:
       description: A log record
       type: object
       properties:
         transaction_id:
-          $ref: '#/components/schemas/transactionID'
+          $ref: "#/components/schemas/transactionID"
         direction:
           description: The direction of a request. I.e. is the request being send or received
           type: string
@@ -134,14 +134,28 @@ components:
           description: The hash of a Grant
           example: $1$4$+PQI7we01qIfEwq4O5UioLKzjGBgRva6F5+bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w/mg==
           maxLength: 1024
+        source_type:
+          type: string
+          enum:
+            - TYPE_SOURCE
+            - TYPE_DELEGATED_SOURCE
         source:
           oneOf:
-            - $ref: '#/components/schemas/source'
-            - $ref: '#/components/schemas/sourceDelegated'
+            - $ref: "#/components/schemas/source"
+            - $ref: "#/components/schemas/sourceDelegated"
+          discriminator:
+            propertyName: source_type
+        destination_type:
+          type: string
+          enum:
+            - TYPE_DESTINATION
+            - TYPE_DELEGATED_DESTINATION
         destination:
           oneOf:
-            - $ref: '#/components/schemas/destination'
-            - $ref: '#/components/schemas/destinationDelegated'
+            - $ref: "#/components/schemas/destination"
+            - $ref: "#/components/schemas/destinationDelegated"
+          discriminator:
+            propertyName: destination_type
         service_name:
           description: The name of the Service
           type: string
@@ -153,34 +167,54 @@ components:
           type: integer
           format: int64
           minimum: 0
+      required:
+        - transaction_id
+        - direction
+        - grant_hash
+        - source_type
+        - source
+        - destination_type
+        - destination
+        - service_name
+        - created_at
     source:
       description: Details of the Peer initiating the request
       type: object
       properties:
         outway_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
+      required:
+        - outway_peer_id
     sourceDelegated:
       description: Details of the Peer initiating the request and the Delegator
       type: object
       properties:
         outway_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
         delegator_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
+      required:
+        - outway_peer_id
+        - delegator_peer_id
     destination:
       description: Details of the Peer offering the Service
       type: object
       properties:
         service_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
+      required:
+        - service_peer_id
     destinationDelegated:
       description: Details of the Peer offering the Service and the Delegator
       type: object
       properties:
         service_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
         delegator_peer_id:
-          $ref: '#/components/schemas/peerID'
+          $ref: "#/components/schemas/peerID"
+      required:
+        - service_peer_id
+        - delegator_peer_id
     peerID:
       description: The ID of a Peer
       type: string
