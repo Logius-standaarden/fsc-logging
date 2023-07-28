@@ -37,7 +37,7 @@ paths:
             minimum: 0
           required: false
         - in: query
-          description: A list of Grant hashes on which to filter
+          description: A list of Grant hashes on which to filter. When multiple filters are used the records where either condition is true should be returned
           name: grant_hash
           schema:
             type: array
@@ -50,7 +50,7 @@ paths:
           style: form
           explode: false
         - in: query
-          description: A list of service names on which to filter
+          description: A list of service names on which to filter. When multiple filters are used the records where either condition is true should be returned
           name: service_name
           schema:
             type: array
@@ -64,7 +64,7 @@ paths:
           style: form
           explode: false
         - in: query
-          description: A list of transaction IDs on which to filter
+          description: A list of transaction IDs on which to filter. When multiple filters are used the records where either condition is true should be returned
           name: transaction_id
           schema:
             type: array
