@@ -44,7 +44,7 @@ paths:
             items:
               type: string
               description: The hash of a Grant
-              example: $1$4$+PQI7we01qIfEwq4O5UioLKzjGBgRva6F5+bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w/mg==
+              example: $1$4$-PQI7we01qIfEwq4O5UioLKzjGBgRva6F5-bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w_mg
               maxLength: 1024
           required: false
           style: form
@@ -132,7 +132,7 @@ components:
         grant_hash:
           type: string
           description: The hash of a Grant
-          example: $1$4$+PQI7we01qIfEwq4O5UioLKzjGBgRva6F5+bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w/mg==
+          example: $1$4$-PQI7we01qIfEwq4O5UioLKzjGBgRva6F5-bUfDlKxUjcY5yX1MRsn6NKquDbL8VcklhYO9sk18rHD6La3w_mg
           maxLength: 1024
         source_type:
           type: string
