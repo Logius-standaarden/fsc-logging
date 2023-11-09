@@ -1,6 +1,6 @@
 %%%
-title = "FSC - delegation"
-abbrev = "FSC - delegation"
+title = "FSC - logging"
+abbrev = "FSC - logging"
 ipr = "trust200902"
 submissiontype = "independent"
 area = "Internet"
@@ -10,7 +10,7 @@ keyword = ["Internet-Draft"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-fsc-delegation-00"
+value = "draft-fsc-logging-00"
 stream = "independent"
 status = "informational"
 
