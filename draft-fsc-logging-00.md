@@ -56,6 +56,13 @@ organization = "vanG IT"
   [author.address]
    email = "e.van.gelderen@vang.nl"
 
+[[author]]
+initials = "P.M."
+surname = "Gaemers"
+fullname = "Pim Marcel Gaemers"
+organization = "apily"
+[author.address]
+email = "pim.gaemers@apily.dev"
 
 %%%
 
