@@ -53,7 +53,7 @@ paths:
           style: form
           explode: false
         - in: query
-          description: A list of transaction IDs on which to filter. When multiple filters are used the records where either condition is true should be returned
+          description: A list of transaction IDs on which to filter. When this query parameter is set the pagination parameters and other filters should be ignored
           name: transaction_ids
           schema:
             type: array
