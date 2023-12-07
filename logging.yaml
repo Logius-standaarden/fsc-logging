@@ -54,7 +54,7 @@ paths:
           explode: false
         - in: query
           description: A list of transaction IDs on which to filter. When multiple filters are used the records where either condition is true should be returned
-          name: transaction_id
+          name: transaction_ids
           schema:
             type: array
             items:
