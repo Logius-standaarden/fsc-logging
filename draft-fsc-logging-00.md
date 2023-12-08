@@ -215,7 +215,11 @@ When the Service is published on behalf of another Peer the destination of a log
 
 This extension introduces a new error code for the Inway:
 
-- `TRANSACTION_LOG_WRITE_ERROR`: The TransactionLog record could not be created.
+| Error code                  | HTTP status code | Description                                                |
+|-----------------------------|------------------|------------------------------------------------------------|
+| TRANSACTION_LOG_WRITE_ERROR | 500              | The TransactionLog record could not be created             |
+| INVALID_LOG_RECORD_ID       | 400              | The format of the `Fsc-Transaction-Id` header is not valid |
+| MISSING_LOG_RECORD_ID       | 400              | The the `Fsc-Transaction-Id` header is missing             |
 
 ## Outway
 
@@ -227,7 +231,7 @@ The FSC Log specification requires the Outway described in Core to be implemente
 
 The Outway **MUST** write a record to the TransactionLog for each request that will be sent to the Inway.
 
-The Outway **MUST** create a TransactionID which **MUST** be unique for the transaction.
+The Outway **MUST** create a TransactionID which **MUST** be unique for the transaction and **MUST** be a UUIDv7.
 
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
@@ -247,7 +251,11 @@ When the Service is published on behalf of another Peer the destination of a log
 
 This extension introduces a new error code for the Outway:
 
-- `TRANSACTION_LOG_WRITE_ERROR`: The TransactionLog record could not be created.
+| Error code                                          | HTTP status code | Description                                                |
+|-----------------------------------------------------|------------------|------------------------------------------------------------|
+| TRANSACTION_LOG_WRITE_ERROR                       |  500             | The TransactionLog record could not be created             |
+| INVALID_LOG_RECORD_ID       | 400              | The format of the `Fsc-Transaction-Id` header is not valid |
+| MISSING_LOG_RECORD_ID       | 400              | The the `Fsc-Transaction-Id` header is missing             |
 
 # References
 
