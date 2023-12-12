@@ -58,7 +58,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/components/schemas/uuid"
+              $ref: "#/components/schemas/transactionID"
           required: false
           style: form
           explode: false
@@ -122,6 +122,9 @@ components:
       example: "12345678901234567891"
       minLength: 1
       maxLength: 20
+    transactionID:
+      type: string
+      description: The ID of the Transaction. Format is determined in a FSC Profile
     serviceName:
       description: The name of a service
       type: string
@@ -139,12 +142,6 @@ components:
       format: int64
       example: 1672527600
       minimum: 0
-    uuid:
-      type: string
-      description: UUID v7
-      example: 0189f7e5-c883-7106-8272-ccb7fcba0575
-      minLength: 36
-      maxLength: 36
     sourceType:
       type: string
       enum:
@@ -160,7 +157,7 @@ components:
       type: object
       properties:
         transaction_id:
-          $ref: "#/components/schemas/uuid"
+          $ref: "#/components/schemas/transactionID"
         direction:
           description: The direction of a request. I.e. is the request being send or received
           type: string
