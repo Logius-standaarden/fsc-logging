@@ -231,7 +231,7 @@ The FSC Log specification requires the Outway described in Core to be implemente
 
 The Outway **MUST** write a record to the TransactionLog for each request that will be sent to the Inway.
 
-The Outway **MUST** create a TransactionID which **MUST** be unique for the transaction and **MUST** be a UUIDv7.
+The Outway **MUST** create a TransactionID which **MUST** be unique for the transaction, the format is determined in a FSC Profile.
 
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
