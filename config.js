@@ -11,7 +11,7 @@ let respecConfig = {
 
     previousMaturity: "VV",
     title: "FSC - Logging",
-    content: {"draft-fsc-logging-00-introduction": "introduction", "draft-fsc-logging-00-architecture": "architecture", "draft-fsc-logging-00-specifications": "specifications"},
+    content: {"draft-fsc-logging-00-introduction": "", "draft-fsc-logging-00-architecture": "", "draft-fsc-logging-00-specifications": ""},
     editors:
         [
             {
