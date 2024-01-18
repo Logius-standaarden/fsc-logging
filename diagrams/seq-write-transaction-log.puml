@@ -18,17 +18,17 @@ box "Provider"
 end box
 
 client -> outway: Request
-outway -> outway: Generate __TransactionID__
-outway -> transactionLogConsumer: Write record\nwith __TransactionID__
+outway -> outway: Generate a __TransactionID__
+outway -> transactionLogConsumer: Write record\nwith the __TransactionID__
 transactionLogConsumer --> outway: Record received
-outway -> inway: Request\nwith __TransactionID__ in HTTP header
+outway -> inway: Request\nwith the __TransactionID__ in an HTTP header
 inway -> inway: Parse __TransactionID__ from request
-inway -> transactionLogProvider: Write record\nwith __TransactionID__
+inway -> transactionLogProvider: Write record\nwith the __TransactionID__
 transactionLogProvider --> inway:  Record received
-inway -> service: Request
+inway -> service: Request\nwith the __TransactionID__ in an HTTP header
 service --> inway: Response
 inway --> outway: Response
-outway --> client: Response
+outway --> client: Response\nwith the __TransactionID__ in an HTTP header
 
 skinparam sequenceBoxBorderColor #transparent
 skinparam boxPadding 50
