@@ -1,6 +1,6 @@
 # Introduction
 
-This RFC is an extension of the Federated Service Connectivity (FSC) Core specification. This extension describes how Peers should log requests made to Services and how Peers should provide log records to other Peers.
+The Logging specification is an extension of the Federated Service Connectivity (FSC) Core specification. This extension describes how Peers should log requests made to Services and how Peers should provide log records to other Peers.
 
 ## Purpose
 
