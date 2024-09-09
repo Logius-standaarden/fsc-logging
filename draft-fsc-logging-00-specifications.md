@@ -31,13 +31,10 @@ The FSC Log specification requires the Manager described in Core to be implement
 
 The Manager **MUST** be able to provide log records to other Peers.
 
-The Manager **MUST** only return log records which match the following criteria:
+The Manager **MUST** only return log records which match any of the following criteria:
 
 - The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.source.outway_peer_id`
 - The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.destination.service_peer_id`
-
-If the Delegation extension is enabled the following two criteria also apply:
-
 - The Peer ID of the X.509 certificate used by the Peer requesting the log records matches the value of the field `logRecord.source.delegator_peer_id`
 - The Peer ID of the X.509 certificate used by the Peer requesting the TransactionLog records matches the value of the field `logRecord.destination.delegator_peer_id`
 
