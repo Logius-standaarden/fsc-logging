@@ -33,7 +33,7 @@ A Peers log of Transactions. This log can contain both incoming and outgoing req
 A unique identifier which can be used to trace a Transaction between Peers.
 
 ## Profiles
-When using the Logging Extension the following additions **MUST** be made to the [FSC Profile](../core/draft-fsc-core-00.html#profiles):
+When using the Logging Extension the following additions **MUST** be made to the [FSC Profile](https://gitdocumentatie.logius.nl/publicatie/fsc/core/#profiles):
 1. Determine the expiration date for log records
 
 In addition, the mandatory decisions a Profile **MAY** also contain additional agreements or restrictions within the Group. These are not technically required for the operation of FSC Logging extension, but can become mandatory within a Group. For example an additional set of rules to comply with local legislation.

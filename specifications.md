@@ -90,7 +90,7 @@ The Outway **MUST** create a TransactionID which **MUST** be unique for the tran
 
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
-The TransactionLog record **MUST** contain the fields described in the [TransactionLog record section](#transaction_log_record)
+The TransactionLog record **MUST** contain the fields described in the [TransactionLog record section](#log_record)
 
 The Outway **MUST** deny the request if the record to the TransactionLog could not be written.
 
