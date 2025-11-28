@@ -189,7 +189,7 @@ components:
         additional_data:
           description: Optional JSON object with arbitrary key-value pairs
           additionalProperties: true
-          type: object 
+          type: object
         created_at:
           $ref: "#/components/schemas/timestamp"
       required:
