@@ -1,13 +1,16 @@
-let respecConfig = {
+import { loadRespecWithConfiguration } from "https://logius-standaarden.github.io/publicatie/respec/organisation-config.mjs";
+
+loadRespecWithConfiguration({
     useLogo: true,
     useLabel: true,
     license: "cc-by",
-    specStatus: "DEF",
+    specStatus: "WV",
     specType: "ST",
     pubDomain: "fsc",
     shortName: "logging",
     publishDate: "2024-12-12",
     publishVersion: "1.0.0",
+    previousPublishVersion: [],
 
     editors:
         [
@@ -86,4 +89,4 @@ let respecConfig = {
             },
         ],
     github: "https://github.com/Logius-standaarden/fsc-logging",
-};
+});
