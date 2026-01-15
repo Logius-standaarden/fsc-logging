@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - develop
 jobs:
   build:
     name: Build
@@ -18,3 +19,4 @@ jobs:
     name: Publish (Logius)
     uses: Logius-standaarden/Automatisering/.github/workflows/publish.yml@main
     secrets: inherit
+
