@@ -41,7 +41,7 @@ Below are a few examples listed of these additional decisions for inspirational 
 1. formatting restrictions on the TransactionID, for example UUIDv7
 
 ## Relationships with other standards
-The FSC Log integrates well with other standards. It can, for example, work together with two other standards from the Dutch Federatief Datastelsel.
+The FSC Log integrates well with other standards. It can, for example, work together with two other standards from the Dutch [Federatief Datastelsel](https://realisatieibds.nl/groups/view/0056c9ef-5c2e-44f9-a998-e735f1e9ccaa/federatief-datastelsel/wiki/view/6eb23feb-22b9-4d0a-abf1-512cc86c2d19/wat-is-het-federatief-datastelsel).
 Within the Federatief Data Stelsel, three logging standards have been developed. Each has its own scope, and they complement one another:
 
 * This FSC log, which records which transactions have taken place. This operates at the lowest layer (transport) and shows who exchanged data with whom and which contracts were involved.
