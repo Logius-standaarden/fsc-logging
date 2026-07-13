@@ -8,7 +8,7 @@ The Inway will parse the unique ID from the request and also write a record cont
 > The storage of the log record MAY be implemented both synchronously or asynchronously. For both implementations it is REQUIRED to receive confirmation that the log record is persisted in order to continue.
 > For example, you can introduce a message broker to improve performance. The message broker will ensure the records are persisted later on.
 
-![Write to the TransactionLog](diagrams/seq-write-transaction-log.svg "Write to the TransactionLog")
+![Write to the TransactionLog](media/seq-write-transaction-log.svg "Write to the TransactionLog")
 
 1. The client sends a request to the Outway.
 2. The Outway generates a unique ID to be used as the TransactionID.
@@ -28,7 +28,7 @@ The Inway will parse the unique ID from the request and also write a record cont
 A Peer provides the TransactionLog to other Peers. A Peer can request the records of the TransactionLog through the Manager of a Peer.
 The Manager returns only logs records that involve the Peer requesting the log records.
 
-![Provide the TransactionLog](diagrams/seq-provide-transaction-log.svg "Provide the TransactionLog")
+![Provide the TransactionLog](media/seq-provide-transaction-log.svg "Provide the TransactionLog")
 
 1. Peer A requests the TransactionLog from Peer B.
 2. Peer B returns the TransactionLog records that contain Peer B.
