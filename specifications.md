@@ -2,7 +2,7 @@
 
 ## Log record {#log_record}
 
-The fields that a log record **MUST** contain are described in the [OpenAPI Specification](logging.yaml)
+The fields that a log record **MUST** contain are described in the [OpenAPI Specification](media/logging.yaml)
 
 ### Access token
 
@@ -40,7 +40,7 @@ The Manager **MUST** only return log records which match any of the following cr
 
 ### Interface
 
-The Manager **MUST** implement the interface described in the [OpenAPI Specification](logging.yaml)
+The Manager **MUST** implement the interface described in the [OpenAPI Specification](media/logging.yaml)
 
 ## Inway
 
@@ -62,9 +62,9 @@ The Inway **MUST** deny the request if the record to the TransactionLog could no
 
 #### Delegation
 
-When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](logging.yaml).
+When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](media/logging.yaml).
 
-When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](logging.yaml).
+When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](media/logging.yaml).
 
 #### Error response
 
@@ -98,9 +98,9 @@ The Outway **MUST** add the TransactionID to the response sent to the Client usi
 
 #### Delegation
 
-When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](logging.yaml).
+When the requesting Peer is making the request on behalf of another Peer the source of a log record **MUST** contain a sourceDelegated object as described in the [OpenAPI Specification](media/logging.yaml).
 
-When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](logging.yaml).
+When the Service is published on behalf of another Peer the destination of a log record **MUST** contain a destinationDelegated as described in the [OpenAPI Specification](media/logging.yaml).
 
 #### Error response
 
