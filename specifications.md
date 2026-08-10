@@ -77,7 +77,7 @@ The Inway **MUST** add the TransactionID to the request sent to the Service usin
 
 The TransactionLog record **MUST** contain the fields described in the [log record section](#log_record)
 
-If the request sent to the Service has the HTTP header `traceparent`, the Inway MUST set the `trace_id` and `span_id` following [[[trace-context-1]]].
+If the request sent to the Service has the HTTP header `traceparent`, the Inway MUST extract the `trace_id` and `span_id` from the header value following [[[trace-context-1]]].
 
 The Inway **MUST** deny the request if the record to the TransactionLog could not be written.
 
@@ -113,7 +113,7 @@ The Outway **MUST** add the TransactionID to the request sent to the Inway using
 
 The TransactionLog record **MUST** contain the fields described in the [TransactionLog record section](#log_record)
 
-If the request sent to the Inway has the HTTP header `traceparent`, the Outway MUST set the `trace_id` and `span_id` following [[[trace-context-1]]].
+If the request sent to the Inway has the HTTP header `traceparent`, the Outway MUST extract the `trace_id` and `span_id` from the header value following [[[trace-context-1]]].
 
 The Outway **MUST** deny the request if the record to the TransactionLog could not be written.
 
