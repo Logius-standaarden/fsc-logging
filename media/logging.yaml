@@ -158,6 +158,16 @@ components:
       properties:
         transaction_id:
           $ref: "#/components/schemas/transactionID"
+        trace_id:
+          description: Optional `trace_id` as extracted from the `traceparent` header of a request, if such a header existed
+          type: string
+          pattern: ^[0-9a-f]{32}$
+          example: ef4e77b9b03b585fb6135fcf8d8555fb
+        span_id:
+          description: Optional `span_id` as extracted from the `traceparent` header of a request, if such a header existed
+          type: string
+          pattern: ^[0-9a-f]{16}$
+          example: beb0291b5162d850
         direction:
           description: The direction of a request. I.e. is the request being send or received
           type: string

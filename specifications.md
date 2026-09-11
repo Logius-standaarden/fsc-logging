@@ -2,7 +2,26 @@
 
 ## Log record {#log_record}
 
-The fields that a log record **MUST** contain are described in the [OpenAPI Specification](media/logging.yaml)
+A log record MUST contain the following fields:
+
+| Field             | Type    | Mandatory? |
+|-------------------|---------|------------|
+| `transaction_id`  | string  | mandatory  |
+| `direction`       | enum    | mandatory  |
+| `grant_hash`      | string  | mandatory  |
+| `source`          | object  | mandatory  |
+| `destination`     | object  | mandatory  |
+| `service_name`    | string  | mandatory  |
+| `created_at`      | uint64  | mandatory  |
+| `additional_data` | object  | optional   |
+| `trace_id`        | 16 byte | optional   |
+| `span_id`         | 8 byte  | optional   |
+
+<div class="note">
+  
+These fields are also present in the [OpenAPI Specification](media/logging.yaml).
+
+</div>
 
 ### Access token
 
@@ -58,6 +77,8 @@ The Inway **MUST** add the TransactionID to the request sent to the Service usin
 
 The TransactionLog record **MUST** contain the fields described in the [log record section](#log_record)
 
+If the request sent to the Service has the HTTP header `traceparent`, the Inway MUST process the header following [[[trace-context-1]]]: extract `trace-id` as the `trace_id` and `parent-id` as the `span_id` from the header value.
+
 The Inway **MUST** deny the request if the record to the TransactionLog could not be written.
 
 #### Delegation
@@ -91,6 +112,8 @@ The Outway **MUST** create a TransactionID which **MUST** be unique for the tran
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
 The TransactionLog record **MUST** contain the fields described in the [TransactionLog record section](#log_record)
+
+If the request sent to the Inway has the HTTP header `traceparent`, the Outway MUST process the header following [[[trace-context-1]]]: extract `trace-id` as the `trace_id` and `parent-id` as the `span_id` from the header value.
 
 The Outway **MUST** deny the request if the record to the TransactionLog could not be written.
 
