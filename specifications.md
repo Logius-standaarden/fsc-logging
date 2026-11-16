@@ -13,11 +13,12 @@ Data from the access token **MUST** be used to fill the following fields of the 
 `accessToken.iss` -->  `logRecord.destination.service_peer_id`
 `accessToken.svc` -->  `logRecord.service_name`
 
-in case of a Peer making a request on behalf of another Peer an additional field **MUST** be set:
+in case of a Peer making a request on behalf of another Peer an additional field **MUST** be set and the `outway_peer_id` field is set by another claim:
 
-`accessToken.cdi` --> `logRecord.source.delegator_peer_id`
+`accessToken.sub` --> `logRecord.source.delegator_peer_id`
+`accessToken.act.sub` --> `logRecord.source.outway_peer_id`
 
-in case of a request made to a Service offered on behalf of another Peer and additional field **MUST** be set:
+in case of a request made to a Service offered on behalf of another Peer an additional field **MUST** be set:
 
 `accessToken.pdi` --> `logRecord.destination.delegator_peer_id`
 
@@ -68,13 +69,13 @@ When the Service is published on behalf of another Peer the destination of a log
 
 #### Error response
 
-This extension introduces a new error code for the Inway:
+This extension introduces new error codes for [the Inway](https://gitdocumentatie.logius.nl/publicatie/fsc/core/2.0.0/#inway):
 
 | Error code                  | HTTP status code | Description                                                |
 |-----------------------------|------------------|------------------------------------------------------------|
 | TRANSACTION_LOG_WRITE_ERROR | 500              | The TransactionLog record could not be created             |
 | INVALID_LOG_RECORD_ID       | 400              | The format of the `Fsc-Transaction-Id` header is not valid |
-| MISSING_LOG_RECORD_ID       | 400              | The the `Fsc-Transaction-Id` header is missing             |
+| MISSING_LOG_RECORD_ID       | 400              | The `Fsc-Transaction-Id` header is missing             |
 
 ## Outway
 
@@ -86,7 +87,7 @@ The FSC Log specification requires the Outway described in Core to be implemente
 
 The Outway **MUST** write a record to the TransactionLog for each request that will be sent to the Inway.
 
-The Outway **MUST** create a TransactionID which **MUST** be unique for the transaction, the format is determined in a FSC Profile.
+The Outway **MUST** create a TransactionID that is unique for the transaction and complies with the format defined by the FSC Group.
 
 The Outway **MUST** add the TransactionID to the request sent to the Inway using the HTTP header `Fsc-Transaction-Id`.
 
@@ -104,10 +105,8 @@ When the Service is published on behalf of another Peer the destination of a log
 
 #### Error response
 
-This extension introduces a new error code for the Outway:
+This extension introduces a new error code for [the Outway](https://gitdocumentatie.logius.nl/publicatie/fsc/core/2.0.0/#outway):
 
 | Error code                                          | HTTP status code | Description                                                |
 |-----------------------------------------------------|------------------|------------------------------------------------------------|
-| TRANSACTION_LOG_WRITE_ERROR                       |  500             | The TransactionLog record could not be created             |
-| INVALID_LOG_RECORD_ID       | 400              | The format of the `Fsc-Transaction-Id` header is not valid |
-| MISSING_LOG_RECORD_ID       | 400              | The the `Fsc-Transaction-Id` header is missing             |
+| TRANSACTION_LOG_WRITE_ERROR                         |  500             | The TransactionLog record could not be created             |
