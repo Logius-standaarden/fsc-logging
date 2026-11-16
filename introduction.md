@@ -4,7 +4,7 @@ The Logging specification is an extension of the Federated Service Connectivity 
 
 ## Purpose
 
-Organizations should handle data in a transparent and responsible manner, partly this means that each organization should keep a log of data handled by the organization and provide insight into this log to relevant parties. FSC aims to uniform the logging of API requests to lay the groundwork for more extensive logging requirements like GDRP.
+Organizations should handle data in a transparent and responsible manner, partly this means that each organization should keep a log of data handled by the organization and provide insight into this log to relevant parties. FSC aims to uniform the logging of API requests to lay the groundwork for more extensive logging requirements like GDPR.
 As it is impossible to create a logging standard that will satisfy the requirements of each individual organization, FSC will focus on logging the properties of an API request of which FSC can guarantee its authenticity e.g. the Peer making the request, the Peer receiving the request, the Service that is being called etc.
 Organizations can use this as a foundation to create a log that will satisfy all their needs.
 
@@ -32,10 +32,9 @@ A Peers log of Transactions. This log can contain both incoming and outgoing req
 
 A unique identifier which can be used to trace a Transaction between Peers.
 
-## Profiles
-When using the Logging Extension the following additions **MUST** be made to the [FSC Profile](https://gitdocumentatie.logius.nl/publicatie/fsc/core/#profiles):
-1. Determine the expiration date for log records
-
-In addition, the mandatory decisions a Profile **MAY** also contain additional agreements or restrictions within the Group. These are not technically required for the operation of FSC Logging extension, but can become mandatory within a Group. For example an additional set of rules to comply with local legislation.
-Below are a few examples listed of these additional decisions for inspirational purposes:
+## Groups
+When using the Logging Extension the following additions **MUST** be made to the [FSC Group](hhttps://gitdocumentatie.logius.nl/publicatie/fsc/core/2.0.0/#group_rules):
 1. formatting restrictions on the TransactionID, for example UUIDv7
+2. Determine the for log records
+
+In addition, the mandatory decisions a Group **MAY** also contain additional agreements or restrictions. These are not technically required for the operation of FSC Logging extension, but can become mandatory within a Group. For example an additional set of rules to comply with local legislation.

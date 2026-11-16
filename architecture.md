@@ -31,7 +31,7 @@ The Manager returns only logs records that involve the Peer requesting the log r
 ![Provide the TransactionLog](media/seq-provide-transaction-log.svg "Provide the TransactionLog")
 
 1. Peer A requests the TransactionLog from Peer B.
-2. Peer B returns the TransactionLog records that contain Peer B.
+2. Peer B returns the TransactionLog records that contain Peer A.
 
 ## Connecting log records
 
